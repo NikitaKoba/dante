@@ -34,7 +34,7 @@
  *  Software Distribution Coordinator  or  sdc@inet.no
  *  Inferno Nettverk A/S
  *  Oslo Research Park
- *  Gaustadalléen 21
+ *  GaustadallÃ©en 21
  *  NO-0349 Oslo
  *  Norway
  *
@@ -1233,7 +1233,7 @@ usage(code)
 
    (void)fprintf(code == 0 ? stdout : stderr,
 "%s v%s.  Copyright (c) 1997 - 2024, Inferno Nettverk A/S, Norway.\n"
-"usage: %s [-DLNVdfhnv]\n"
+"usage: %s [-DLNVdfhnPpv]\n"
 "   -D             : run in daemon mode\n"
 "   -L             : shows the license for this program\n"
 "   -N <number>    : fork of <number> servers [1]\n"
@@ -1242,6 +1242,7 @@ usage(code)
 "   -f <filename>  : use <filename> as configuration file [%s]\n"
 "   -h             : print this information\n"
 "   -n             : disable TCP keep-alive\n"
+"   -P <filename>  : read password hashes from <filename>\n"
 "   -p <filename>  : write pid to <filename> [%s]\n"
 "   -v             : print version info\n",
                  PRODUCT,
@@ -1447,7 +1448,7 @@ serverinit(argc, argv)
    for (i = 0; i < ELEMENTS(sockscf.state.reservedfdv); ++i)
       sockscf.state.reservedfdv[i] = -1;
 
-   while ((ch = getopt(argc, argv, "DLN:Vd:f:hnp:v")) != -1) {
+   while ((ch = getopt(argc, argv, "DLN:Vd:f:hnP:p:v")) != -1) {
       switch (ch) {
          case 'D':
             sockscf.option.daemon = 1;
@@ -1496,6 +1497,10 @@ serverinit(argc, argv)
 
          case 'n':
             sockscf.option.keepalive = 0;
+            break;
+
+         case 'P':
+            sockscf.option.passwdfile = optarg;
             break;
 
          case 'p':

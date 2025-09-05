@@ -33,7 +33,7 @@
  *  Software Distribution Coordinator  or  sdc@inet.no
  *  Inferno Nettverk A/S
  *  Oslo Research Park
- *  Gaustadalléen 21
+ *  GaustadallÃ©en 21
  *  NO-0349 Oslo
  *  Norway
  *
@@ -2192,6 +2192,10 @@ options2string(options, prefix, str, strsize)
                        prefix,
                        options->pidfile == NULL ?
                           SOCKD_PIDFILE : options->pidfile);
+   strused += snprintf(&str[strused], strsize - strused,
+                       "\"%spasswdfile\": \"%s\",\n",
+                       prefix,
+                       options->passwdfile == NULL ? "<system>" : options->passwdfile);
 
    STRIPTRAILING(str, strused, stripstring);
    return str;

@@ -34,7 +34,7 @@
  *  Software Distribution Coordinator  or  sdc@inet.no
  *  Inferno Nettverk A/S
  *  Oslo Research Park
- *  Gaustadalléen 21
+ *  GaustadallÃ©en 21
  *  NO-0349 Oslo
  *  Norway
  *
@@ -302,6 +302,7 @@ extern char *__progname;
 #define ENV_UPNP_IGD                       "UPNP_IGD"
 #define ENV_SOCKS_AUTOADD_LANROUTES        "SOCKS_AUTOADD_LANROUTES"
 #define ENV_SOCKS_REDIRECT_FROM            "SOCKS_REDIRECT_FROM"
+#define ENV_SOCKD_PASSWD_FILE              "SOCKD_PASSWD_FILE"
 
    /*
     * macros
