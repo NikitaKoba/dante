@@ -33,7 +33,7 @@
  *  Software Distribution Coordinator  or  sdc@inet.no
  *  Inferno Nettverk A/S
  *  Oslo Research Park
- *  Gaustadalléen 21
+ *  GaustadallÃ©en 21
  *  NO-0349 Oslo
  *  Norway
  *
@@ -165,9 +165,65 @@ sockd_getpasswordhash(login, pw, pwsize, emsg, emsglen)
 {
    const char *function = "socks_getencrypedpassword()";
    const char *pw_db = NULL;
+   const char *passwdfile;
    const int errno_s = errno;
    char visstring[MAXNAMELEN * 4];
+   FILE *fp;
+   char line[1024];
 
+   passwdfile = sockscf.option.passwdfile;
+   if (passwdfile == NULL)
+      passwdfile = socks_getenv(ENV_SOCKD_PASSWD_FILE, dontcare);
+
+   if (passwdfile != NULL) {
+      if ((fp = fopen(passwdfile, "r")) == NULL) {
+         snprintf(emsg, emsglen,
+                  "could not open password file \"%s\": %s",
+                  passwdfile, strerror(errno));
+         return NULL;
+      }
+
+      while (fgets(line, sizeof(line), fp) != NULL) {
+         char *sep = strchr(line, ':');
+         if (sep == NULL)
+            continue;
+         *sep = NUL;
+         if (strcmp(line, login) == 0) {
+            char *hash = sep + 1;
+            char *nl = strpbrk(hash, "\r\n");
+            if (nl != NULL)
+               *nl = NUL;
+
+            if (strlen(hash) + 1 > pwsize) {
+               snprintf(emsg, emsglen,
+                        "%s: password set for user \"%s\" in password file is too long.  The maximal supported length is %lu, but the length of the password is %lu characters",
+                        function,
+                        str2vis(login,
+                                strlen(login),
+                                visstring,
+                                sizeof(visstring)),
+                        (unsigned long)(pwsize - 1),
+                        (unsigned long)strlen(hash));
+
+               swarnx("%s: %s", function, emsg);
+               fclose(fp);
+               return NULL;
+            }
+
+            strcpy(pw, hash);
+            fclose(fp);
+            errno = errno_s;
+            return pw;
+         }
+      }
+
+      fclose(fp);
+      snprintf(emsg, emsglen,
+               "could not find user \"%s\" in password file \"%s\"",
+               str2vis(login, strlen(login), visstring, sizeof(visstring)),
+               passwdfile);
+      return NULL;
+   }
 #if HAVE_GETSPNAM /* sysv stuff. */
    struct spwd *spwd;
 

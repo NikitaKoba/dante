@@ -34,7 +34,7 @@
  *  Software Distribution Coordinator  or  sdc@inet.no
  *  Inferno Nettverk A/S
  *  Oslo Research Park
- *  Gaustadalléen 21
+ *  GaustadallÃ©en 21
  *  NO-0349 Oslo
  *  Norway
  *
@@ -1635,6 +1635,9 @@ typedef struct {
 
    size_t            serverc;         /* number of servers.                   */
 
+   const char        *passwdfile;     /* file with user password hashes.      */
+
+   
    unsigned char     verifyonly;      /* syntax verification of config only.  */
    unsigned char     versiononly;     /* show version info only.              */
 } option_t;
